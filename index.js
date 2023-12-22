@@ -42,6 +42,13 @@ async function run() {
       res.send(result)
     })
 
+    
+    app.get('/getTask/:email',async(req,res)=>{
+      const email=req.params.email;
+      const result=await tasksCollection.find({email:email}).toArray();
+      res.send(result);
+  })
+
 
     app.delete('/getTask/:id',async(req,res)=>{
       const id=req.params.id;
@@ -50,8 +57,30 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/getTask/new/:id',async(req,res)=>{
+        const id=req.params.id;
+        const query={_id:new ObjectId(id)}
+        const result=await tasksCollection.findOne(query)
+        res.send(result)
+      })
 
 
+ app.patch('/getTask/v1/v2/:id',async(req,res)=>{
+        const item=req.body;
+        const id=req.params.id;
+        const filter={_id: new ObjectId(id)}
+        const updatedDoc={
+          $set:{
+            name:item.name,
+            type:item.type,
+            status:item.status,
+            description:item.description,
+            date:item.date
+          }
+        }
+        const result=await tasksCollection.updateOne(filter,updatedDoc)
+        res.send(result)
+      })
 
 
 
